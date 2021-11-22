@@ -47,7 +47,7 @@ def plot_norm(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, p: float) -> None:
     plt.colorbar()
 
     # show the plot
-    plt.show()
+    plt.savefig(f'plots/norm_{p}.png')
 
 
 if __name__ == '__main__':

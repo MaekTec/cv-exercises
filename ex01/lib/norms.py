@@ -32,7 +32,7 @@ def get_norm(p: float = 2, num_points: int = 100) -> Tuple[np.ndarray, np.ndarra
 
     # START TODO #################
     # stack the two inputs at the last axis, then compute the norm over that last axis.
-    raise NotImplementedError
+    Z = np.linalg.norm(np.stack((X, Y), axis=2), axis=2, ord=p)
     # END TODO ###################
 
     return X, Y, Z
