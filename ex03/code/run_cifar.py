@@ -24,15 +24,23 @@ def get_transforms(args):
         # use torchvision.transforms.Compose to compose our custom augmentations
         # horizontal_flip, random_resize_crop, ToTensor, Normalize
         # you can play around with the parameters
-        # train_transforms=
-        raise NotImplementedError
+        train_transforms = torchvision.transforms.Compose(
+            [horizontal_flip(0.5), random_resize_crop(32, (0.3, 1.0)),
+             torchvision.transforms.ToTensor(),
+             torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+        )
         # END TODO #################
 
     elif args.transforms == 'torchvision':
         # START TODO #################
         # achieve the same as above with torchvision transforms
         # compare your own implementation against theirs
-        raise NotImplementedError
+        train_transforms = torchvision.transforms.Compose(
+            torchvision.transforms.RandomHorizontalFlip(0.5),
+            torchvision.transforms.RandomResizedCrop(32, (0.3, 1.0)),
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+        )
         # END TODO #################
 
     val_transforms = torchvision.transforms.Compose(
@@ -137,14 +145,12 @@ def main():
         
     # START TODO #################
     # initialize the SummaryWriter with a log directory in args.out_dir/logs
-    # tb_writer = 
-    raise NotImplementedError
+    tb_writer = SummaryWriter(log_dir=os.path.join(args.out_dir, "logs"))
     # END TODO #################
 
     # START TODO #################
     # get the transforms and pass them to the dataset
-    # train_transforms=
-    raise NotImplementedError
+    train_transforms, val_transforms = get_transforms(args)
     # END TODO #################
 
     # create datasets and dataloaders
@@ -213,7 +219,8 @@ def main():
             train_loss, train_acc = train_one_epoch(model, train_loader, epoch, loss_fn, optimizer, args, device)
             # START TODO ###################
             # add_scalar train_loss and train_acc to tb_writer
-            raise NotImplementedError
+            tb_writer.add_scalar('Loss/train', train_loss, epoch)
+            tb_writer.add_scalar('Accuracy/train', train_acc, epoch)
             # END TODO ###################
 
         # iterate over the val set to compute the accuracy
@@ -221,7 +228,8 @@ def main():
         print(f"Validation of epoch {epoch + 1} complete. Loss {val_loss:.6f} accuracy {val_acc:.2%}")
         # START TODO #################
         # add_scalar val_loss and val_acc to tb_writer
-        raise NotImplementedError
+        tb_writer.add_scalar('Loss/val', val_loss, epoch)
+        tb_writer.add_scalar('Accuracy/val', val_acc, epoch)
         # END TODO ###################
         print(f"---------- End of epoch {epoch + 1}")
 
@@ -238,11 +246,9 @@ def main():
     # START TODO #################
     # add_scalar test_loss and test_acc to tb_writer
     # ideally, you'd remember the model that achieved the best validation performance and test on that
-    raise NotImplementedError
+    tb_writer.add_scalar('Loss/val', test_loss, epoch)
+    tb_writer.add_scalar('Accuracy/val', test_acc, epoch)
     # END TODO ###################
-
-
-
 
 
 if __name__ == '__main__':
