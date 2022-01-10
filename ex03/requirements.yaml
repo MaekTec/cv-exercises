@@ -4,15 +4,6 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-<<<<<<< HEAD
-  - hdf5=1.10.6
-  - libopencv=4.5.1
-  - opencv=4.5.
-  - pillow=8.4.0
-  - py-opencv=4.5.1
-  - tensorboard
-  - torchvision
-=======
   - hdf5
   - libopencv
   - numpy
@@ -25,4 +16,3 @@ dependencies:
   - qt
   - tensorboard
   - torchvision
->>>>>>> master
