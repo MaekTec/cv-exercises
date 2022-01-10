@@ -24,7 +24,7 @@ def validate(model, val_loader,device):
     # Validate the model on a given dataset
 
     if args.apply_bn:
-        model = update_bn_params(model, val_loader, args)
+        model = update_bn_params(model, val_loader, args, device)
 
     model.eval()
     with torch.no_grad():
@@ -87,7 +87,7 @@ def validate_all_c(model,val_transform,device):
 
 
 
-def update_bn_params(model, val_loader, args):
+def update_bn_params(model, val_loader, args, device):
     # START TODO #################
 
     val_loader = torch.utils.data.DataLoader(val_loader.dataset,
@@ -98,18 +98,30 @@ def update_bn_params(model, val_loader, args):
     model = copy.deepcopy(model)
     model.eval()
 
-
     #2. Switch only BN layers to training mode.
     #module.train() will enable training mode
     #See: https://pytorch.org/docs/stable/generated/torch.nn.Module.html?highlight=apply#torch.nn.Module.apply
     #to apply your switching function to multiple layers
+    def train_batchnorm(m):
+        if type(m) == torch.nn.BatchNorm2d:
+            m.train()
+    model.apply(train_batchnorm)
 
     print("Updating BN params (num updates:{})".format(args.num_bn_updates))
 
     #3. Switch off grad computation since we don't need it
+    torch.set_grad_enabled(False)
 
     #4 Loop over test samples and stop if args.num_bn_updates has reached
     # If BN layers are in training mode, the model will accumulate statistics
+    
+    for batch_idx, (data, label) in enumerate(val_loader):
+        # move data to our device
+        data = data.to(device)
+        label = label.to(device)
+        output = model(data)
+        if batch_idx == args.num_bn_updates:
+            break
 
     print("Done.")
 
