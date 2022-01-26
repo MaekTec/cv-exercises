@@ -1,7 +1,7 @@
+from os import execlpe
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
 
 def aepe(gt, pred, weight=None, eps=1e-9):
 
@@ -10,11 +10,14 @@ def aepe(gt, pred, weight=None, eps=1e-9):
     Implement the average end-point error function between the ground truth flow
     and the prediction flow
     hint: check the torch.linalg.norm() to compute the norm of a vector.
-    weight: is a scalar value which is used to scale the metric. This is needed for training but not for testing. 
+    weight: is a scalar value which is used to scale the metric. This is needed for training but not for testing.
+    gt has shape [1, 2, 540, 960]
+    pred has shape [1, 2, 540, 960]
     '''
     # TODO: Implement the average end-point error function between
-
-    return 
+    epe = pointwise_epe(gt, pred, weight) + eps**2
+    aepe = torch.mean(epe)
+    return aepe
 
 
 def pointwise_epe(gt, pred, weight=None):
@@ -26,9 +29,14 @@ def pointwise_epe(gt, pred, weight=None):
     hint: check the torch.linalg.norm() to compute the norm of a vector.
     weight: is a scalar value which is used to scale the metric. This is needed for training but not for testing. 
     The main difference to the previous function is that here we do not average and the result is an error map.
+    gt has shape [1, 2, 540, 960]
+    pred has shape [1, 2, 540, 960]
     '''
-
-    return
+    epe = torch.sqrt(torch.sum((gt - pred)**2, dim=1)) # [1, 540, 960] sqrt?
+    if weight:
+        return weight * epe
+    else:
+        return epe
 
 
 def compute_flow_metrics(sample, model_output):

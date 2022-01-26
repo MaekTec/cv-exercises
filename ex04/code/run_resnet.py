@@ -118,7 +118,6 @@ def update_bn_params(model, val_loader, args, device):
     for batch_idx, (data, label) in enumerate(val_loader):
         # move data to our device
         data = data.to(device)
-        label = label.to(device)
         output = model(data)
         if batch_idx == args.num_bn_updates:
             break

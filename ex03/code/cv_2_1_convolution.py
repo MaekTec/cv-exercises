@@ -40,26 +40,11 @@ def convolve2D(image, kernel, padding=0, strides=1):
     # Indices for output image
     x_out = y_out = -1
     # Iterate through image
-<<<<<<< HEAD
     for y in range(output.shape[1]):
         # START TODO ###################
         for x in range(output.shape[0]):
             # flip kernel to get convolution instead of cross-correlation
             output[x, y] = np.sum(imagePadded[x*strides:x*strides + xKernShape, y*strides:y*strides + yKernShape] * kernel[::-1, ::-1])
-=======
-    for y in range(yKernUp, imagePadded.shape[0], strides):
-        # START TODO ###################
-        # Exit Convolution before y is out of bounds
-        raise NotImplementedError
-        # END TODO ###################
-        
-        # START TODO ###################
-        # iterate over columns and perform convolution
-        # position the center of the kernel at x,y
-        # and save the sum of the elementwise multiplication
-        # to the corresponding pixel in the output image
-        raise NotImplementedError
->>>>>>> master
         # END TODO ###################
     return output
 
@@ -73,9 +58,5 @@ if __name__ == '__main__':
     kernel = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
 
     # Convolve and Save Output
-<<<<<<< HEAD
     output = convolve2D(image, kernel, padding=2, strides=1)
-=======
-    output = convolve2D(image, kernel, padding=2, strides=2)
->>>>>>> master
     cv2.imwrite('2DConvolved.png', output)
